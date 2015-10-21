@@ -8,9 +8,10 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 /**
+ * Purpose: A class using Junit to test all the methods in the class AddressEntry
  * @author Jesus Ramos
- * @version 1.0
- * @since Oct 19, 2015, JDK 8
+ * @version 2.0
+ * @since Oct 20, 2015, JDK 8
  */
 public class AddressEntryTest {
 
@@ -50,6 +51,28 @@ public class AddressEntryTest {
 				+ "4155044788\n";
 		
 		assertEquals(desiredResult, aEntry.toString());
+		
+		//fail("Not yet implemented");
+	}
+	
+	/**
+	 * Test method for {@link address.AddressEntry#toFile()}.
+	 */
+	@Test
+	public void testToFile() {
+		AddressEntry aEntry = new AddressEntry("Booda", "Zesty", "555 Gehringer St", "Concord", 
+				"CA", "94509", "4155044788", "bluesmith@gmail.com");
+		
+		String desiredResult = "Booda\n"
+				+"Zesty\n"
+				+ "555 Gehringer St\n" 
+				+ "Concord\n" 
+				+ "CA\n" 
+				+ "94509\n"
+				+ "bluesmith@gmail.com\n"
+				+ "4155044788";
+		
+		assertEquals(desiredResult, aEntry.toFile());
 		
 		//fail("Not yet implemented");
 	}
@@ -140,6 +163,5 @@ public class AddressEntryTest {
 				"CA", "94509", "4155044788", "bluesmith@gmail.com");
 		assertEquals("bluesmith@gmail.com", aEntry.getEmail());
 		//fail("Not yet implemented");
-	}
-
+	}	
 }
