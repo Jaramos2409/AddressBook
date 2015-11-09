@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="AddressBookTest" project="Exercise1" tests="10" started="10" failures="0" errors="0" ignored="0">
+  <testsuite name="address.AddressBookTest" time="0.011">
+    <testcase name="testClear" classname="address.AddressBookTest" time="0.001"/>
+    <testcase name="testClose" classname="address.AddressBookTest" time="0.002"/>
+    <testcase name="testFind" classname="address.AddressBookTest" time="0.001"/>
+    <testcase name="testRead" classname="address.AddressBookTest" time="0.002"/>
+    <testcase name="testRemoveFirst" classname="address.AddressBookTest" time="0.0"/>
+    <testcase name="testGetKeys" classname="address.AddressBookTest" time="0.001"/>
+    <testcase name="testInsertAdd" classname="address.AddressBookTest" time="0.001"/>
+    <testcase name="testNumOfContacts" classname="address.AddressBookTest" time="0.0"/>
+    <testcase name="testIsEmpty" classname="address.AddressBookTest" time="0.0"/>
+    <testcase name="testRemove" classname="address.AddressBookTest" time="0.003"/>
+  </testsuite>
+</testrun>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="AddressEntryTest" project="Exercise1" tests="11" started="11" failures="0" errors="0" ignored="0">
+  <testsuite name="address.AddressEntryTest" time="0.001">
+    <testcase name="testGetEmail" classname="address.AddressEntryTest" time="0.0"/>
+    <testcase name="testGetPhone" classname="address.AddressEntryTest" time="0.001"/>
+    <testcase name="testGetState" classname="address.AddressEntryTest" time="0.0"/>
+    <testcase name="testToString" classname="address.AddressEntryTest" time="0.0"/>
+    <testcase name="testGetCity" classname="address.AddressEntryTest" time="0.0"/>
+    <testcase name="testGetLastName" classname="address.AddressEntryTest" time="0.0"/>
+    <testcase name="testGetFirstName" classname="address.AddressEntryTest" time="0.0"/>
+    <testcase name="testAddressEntry" classname="address.AddressEntryTest" time="0.0"/>
+    <testcase name="testGetZip" classname="address.AddressEntryTest" time="0.0"/>
+    <testcase name="testGetStreet" classname="address.AddressEntryTest" time="0.0"/>
+    <testcase name="testToFile" classname="address.AddressEntryTest" time="0.0"/>
+  </testsuite>
+</testrun>

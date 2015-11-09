@@ -1,4 +1,4 @@
-package address;
+package address.old;
 
 /**
  * Purpose: The class is used to represent a single entry in an address book.

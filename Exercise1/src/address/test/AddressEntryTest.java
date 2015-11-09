@@ -1,11 +1,12 @@
 /**
  * 
  */
-package address;
+package address.test;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+import address.data.*;
 
 /**
  * Purpose: A class using Junit to test all the methods in the class AddressEntry
@@ -16,7 +17,7 @@ import org.junit.Test;
 public class AddressEntryTest {
 
 	/**
-	 * Test method for {@link address.AddressEntry#AddressEntry(java.lang.String, 
+	 * Test method for {@link address.old.AddressEntry#AddressEntry(java.lang.String, 
 	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, java.lang.String)}.
 	 */
@@ -25,19 +26,19 @@ public class AddressEntryTest {
 		AddressEntry aEntry = new AddressEntry("Booda", "Zesty", "555 Gehringer St", "Concord", 
 				"CA", "94509", "4155044788", "bluesmith@gmail.com");
 		
-		assertEquals("Booda", aEntry.getFirstName());
-		assertEquals("Zesty", aEntry.getLastName());
-		assertEquals("555 Gehringer St", aEntry.getStreet());
-		assertEquals("Concord", aEntry.getCity());
-		assertEquals("CA", aEntry.getState());
-		assertEquals("94509", aEntry.getZip());
+		assertEquals("Booda", aEntry.getName().getFirstName());
+		assertEquals("Zesty", aEntry.getName().getLastName());
+		assertEquals("555 Gehringer St", aEntry.getAddress().getStreet());
+		assertEquals("Concord", aEntry.getAddress().getCity());
+		assertEquals("CA", aEntry.getAddress().getState());
+		assertEquals("94509", aEntry.getAddress().getZip());
 		assertEquals("4155044788", aEntry.getPhone());
 		assertEquals("bluesmith@gmail.com", aEntry.getEmail());
 		//fail("Not yet implemented");
 	}
 
 	/**
-	 * Test method for {@link address.AddressEntry#toString()}.
+	 * Test method for {@link address.old.AddressEntry#toString()}.
 	 */
 	@Test
 	public void testToString() {
@@ -56,7 +57,7 @@ public class AddressEntryTest {
 	}
 	
 	/**
-	 * Test method for {@link address.AddressEntry#toFile()}.
+	 * Test method for {@link address.old.AddressEntry#toFile()}.
 	 */
 	@Test
 	public void testToFile() {
@@ -78,73 +79,73 @@ public class AddressEntryTest {
 	}
 
 	/**
-	 * Test method for {@link address.AddressEntry#getFirstName()}.
+	 * Test method for {@link address.old.AddressEntry#getFirstName()}.
 	 */
 	@Test
 	public void testGetFirstName() {
 		AddressEntry aEntry = new AddressEntry("Booda", "Zesty", "555 Gehringer St", "Concord", 
 				"CA", "94509", "4155044788", "bluesmith@gmail.com");
-		assertEquals("Booda", aEntry.getFirstName());
+		assertEquals("Booda", aEntry.getName().getFirstName());
 		//fail("Not yet implemented");
 	}
 
 	/**
-	 * Test method for {@link address.AddressEntry#getLastName()}.
+	 * Test method for {@link address.old.AddressEntry#getLastName()}.
 	 */
 	@Test
 	public void testGetLastName() {
 		AddressEntry aEntry = new AddressEntry("Booda", "Zesty", "555 Gehringer St", "Concord", 
 				"CA", "94509", "4155044788", "bluesmith@gmail.com");
-		assertEquals("Zesty", aEntry.getLastName());
+		assertEquals("Zesty", aEntry.getName().getLastName());
 		//fail("Not yet implemented");
 	}
 
 	/**
-	 * Test method for {@link address.AddressEntry#getStreet()}.
+	 * Test method for {@link address.old.AddressEntry#getStreet()}.
 	 */
 	@Test
 	public void testGetStreet() {
 		AddressEntry aEntry = new AddressEntry("Booda", "Zesty", "555 Gehringer St", "Concord", 
 				"CA", "94509", "4155044788", "bluesmith@gmail.com");
-		assertEquals("555 Gehringer St", aEntry.getStreet());
+		assertEquals("555 Gehringer St", aEntry.getAddress().getStreet());
 		//fail("Not yet implemented");
 	}
 
 	/**
-	 * Test method for {@link address.AddressEntry#getCity()}.
+	 * Test method for {@link address.old.AddressEntry#getCity()}.
 	 */
 	@Test
 	public void testGetCity() {
 		AddressEntry aEntry = new AddressEntry("Booda", "Zesty", "555 Gehringer St", "Concord", 
 				"CA", "94509", "4155044788", "bluesmith@gmail.com");
-		assertEquals("Concord", aEntry.getCity());
+		assertEquals("Concord", aEntry.getAddress().getCity());
 		//fail("Not yet implemented");
 	}
 
 	/**
-	 * Test method for {@link address.AddressEntry#getState()}.
+	 * Test method for {@link address.old.AddressEntry#getState()}.
 	 */
 	@Test
 	public void testGetState() {
 		AddressEntry aEntry = new AddressEntry("Booda", "Zesty", "555 Gehringer St", "Concord", 
 				"CA", "94509", "4155044788", "bluesmith@gmail.com");
-		assertEquals("CA", aEntry.getState());
+		assertEquals("CA", aEntry.getAddress().getState());
 		//fail("Not yet implemented");
 	}
 
 	/**
-	 * Test method for {@link address.AddressEntry#getZip()}.
+	 * Test method for {@link address.old.AddressEntry#getZip()}.
 	 */
 	@Test
 	public void testGetZip() {
 		AddressEntry aEntry = new AddressEntry("Booda", "Zesty", "555 Gehringer St", "Concord", 
 				"CA", "94509", "4155044788", "bluesmith@gmail.com");
-		assertEquals("94509", aEntry.getZip());
+		assertEquals("94509", aEntry.getAddress().getZip());
 		//fail("Not yet implemented");
 	}
 
 	/**
-	 * Test method for {@link address.AddressEntry#getPhone()}.
+	 * Test method for {@link address.old.AddressEntry#getPhone()}.
 	 */
 	@Test
 	public void testGetPhone() {
@@ -155,7 +156,7 @@ public class AddressEntryTest {
 	}
 
 	/**
-	 * Test method for {@link address.AddressEntry#getEmail()}.
+	 * Test method for {@link address.old.AddressEntry#getEmail()}.
 	 */
 	@Test
 	public void testGetEmail() {

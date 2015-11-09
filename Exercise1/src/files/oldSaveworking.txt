@@ -1,0 +1,61 @@
+JButton btnSave = new JButton("Save");
+		btnSave.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JTextField saveFileField = new JTextField(5);
+				JPanel saveFilePanel = new JPanel();
+				saveFilePanel.setLayout(new GridLayout(0,1));
+				saveFilePanel.add(new JLabel("File Name: "));
+				saveFilePanel.add(saveFileField);
+				
+				int result = JOptionPane.showConfirmDialog(Window.this, saveFileField, 
+			               "Save Your Address Book", JOptionPane.OK_CANCEL_OPTION);
+				
+				if (result == JOptionPane.OK_OPTION) {
+					try {
+						AddressBookApplication.addressBook.close(
+								"src/files/"+saveFileField.getText()+".txt");
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}	
+			}
+		});
+		GridBagConstraints gbc_btnSave = new GridBagConstraints();
+		gbc_btnSave.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnSave.insets = new Insets(0, 0, 0, 5);
+		gbc_btnSave.gridx = 2;
+		gbc_btnSave.gridy = 2;
+		getContentPane().add(btnSave, gbc_btnSave);
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+						JTextField openFileField = new JTextField(5);
+				JPanel openFilePanel = new JPanel();
+				openFilePanel.setLayout(new GridLayout(0,1));
+				openFilePanel.add(new JLabel("File Name: "));
+				openFilePanel.add(openFileField);
+				
+				int result = JOptionPane.showConfirmDialog(Window.this, openFileField, 
+			               "Open Your Address Book", JOptionPane.OK_CANCEL_OPTION);
+				
+				if (result == JOptionPane.OK_OPTION) {
+					try {
+						AddressBookApplication.addressBook.read(
+								"src/files/"+openFileField.getText()+".txt");
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}

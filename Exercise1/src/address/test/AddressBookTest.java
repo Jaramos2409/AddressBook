@@ -1,5 +1,4 @@
-package address;
-
+package address.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
@@ -9,6 +8,7 @@ import java.io.File;
 
 import org.junit.Test;
 
+import address.data.*;
 /**
  * Purpose: A class using Junit to test all the methods in the class AddressBook
  * @author Jesus Ramos
@@ -18,7 +18,7 @@ import org.junit.Test;
 public class AddressBookTest {
 	
 	/**
-	 * Test method for {@link address.AddressBook#insertAddress(address.AddressEntry)}.
+	 * Test method for {@link address.data.AddressBook#insertAddress(address.AddressEntry)}.
 	 */
 	@Test
 	public void testInsertAdd() {
@@ -40,7 +40,7 @@ public class AddressBookTest {
 	
 	
 	/**
-	 * Test method for {@link address.AddressBook#isEmpty()}.
+	 * Test method for {@link address.data.AddressBook#isEmpty()}.
 	 */
 	@Test
 	public void testIsEmpty() {
@@ -56,7 +56,7 @@ public class AddressBookTest {
 	}
 	
 	/**
-	 * Test method for {@link address.AddressBook#numOfContacts()}.
+	 * Test method for {@link address.data.AddressBook#numOfContacts()}.
 	 */
 	@Test
 	public void testNumOfContacts() {
@@ -74,7 +74,7 @@ public class AddressBookTest {
 	}
 
 	/**
-	 * Test method for {@link address.AddressBook#removeFirst()}.
+	 * Test method for {@link address.data.AddressBook#removeFirst()}.
 	 */
 	@Test
 	public void testRemoveFirst() {
@@ -89,7 +89,7 @@ public class AddressBookTest {
 	}
 	
 	/**
-	 * Test method for {@link address.AddressBook#remove(java.lang.String)}.
+	 * Test method for {@link address.data.AddressBook#remove(java.lang.String)}.
 	 */
 	@Test
 	public void testRemove() {
@@ -119,7 +119,7 @@ public class AddressBookTest {
 	}
 	
 	/**
-	 * Test method for {@link address.AddressBook#find(java.lang.String)}.
+	 * Test method for {@link address.data.AddressBook#find(java.lang.String)}.
 	 */
 	@Test
 	public void testFind() {
@@ -153,7 +153,7 @@ public class AddressBookTest {
 	}
 	
 	/**
-	 * Test method for {@link address.AddressBook#read(java.lang.String)}.
+	 * Test method for {@link address.data.AddressBook#read(java.lang.String)}.
 	 * @throws IOException if the file does not successfully open
 	 */
 	@Test
@@ -166,7 +166,7 @@ public class AddressBookTest {
 		System.out.println("List before read:");
 		aBook.list();
 		
-		int number = aBook.read("src/files/file_test2.txt");
+		int number = aBook.load();
 		assertEquals(5, number);
 		assertEquals(5, aBook.numOfContacts());
 		
@@ -175,7 +175,7 @@ public class AddressBookTest {
 	}
 	
 	/**
-	 * Test method for {@link address.AddressBook#close(java.lang.String)}.
+	 * Test method for {@link address.data.AddressBook#save(java.lang.String)}.
 	 * @throws IOException if the file does not successfully open
 	 */
 	@Test
@@ -189,7 +189,7 @@ public class AddressBookTest {
 		aBook.insertAddress(new AddressEntry("Adrian", "Ramos", "777 Lucky Dr", "San Mateo", 
 				"CA", "94684", "9256667893", "adriansmith@gmail.com"));
 		
-		aBook.close("src/files/file_test.txt");
+		aBook.save();
 		
 		
 		File fileTest = new File("src/files/file_test.txt");
@@ -199,7 +199,7 @@ public class AddressBookTest {
 	}
 
 	/**
-	 * Test method for {@link address.AddressBook#clear()}.
+	 * Test method for {@link address.data.AddressBook#clear()}.
 	 */
 	@Test
 	public void testClear() {
@@ -220,7 +220,7 @@ public class AddressBookTest {
 	}
 
 	/**
-	 * Test method for {@link address.AddressBook#getKeys()}.
+	 * Test method for {@link address.data.AddressBook#getKeys()}.
 	 */
 	@Test
 	public void testGetKeys() {
