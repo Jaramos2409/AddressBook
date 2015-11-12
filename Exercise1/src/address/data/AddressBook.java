@@ -172,9 +172,9 @@ public class AddressBook {
 	}
 	
 	/**
-	 * Purpose: Reads in all the contacts from a file. It throws an exception if the file 
-	 * does not open. Otherwise it loads up the addressBook instance up with 
-	 * AddressEntry objects
+	 * Purpose: Reads in all the contacts from a database. It throws an exception 
+	 * if the connection or query fails. Otherwise it loads up the addressBook 
+	 * instance up with AddressEntry objects
 	 * @param filename contains the name of the file 
 	 * @throws SQLException 
 	 * @return the number of entries entered during the current read in.
@@ -208,25 +208,25 @@ public class AddressBook {
 			e1.printStackTrace();
 		}
 		
-		ResultSet rset = stmt.executeQuery("select * from ADDRESSENTRYTABLE");
+		ResultSet addressSet = stmt.executeQuery("select * from ADDRESSENTRYTABLE");
 		
-		while (rset.next ()) {      
+		while (addressSet.next ()) {      
 			counter++;
-			String ID = rset.getString(1);
-			String firstName = rset.getString(2);
-			String lastName = rset.getString(3);
-			String street = rset.getString(4);
-			String city = rset.getString(5);
-			String state = rset.getString(6);
-			String zip = rset.getString(7);
-			String email = rset.getString(8);
-			String phone = rset.getString(9);
-			
+			String ID = addressSet.getString(1);
+			String firstName = addressSet.getString(2);
+			String lastName = addressSet.getString(3);
+			String street = addressSet.getString(4);
+			String city = addressSet.getString(5);
+			String state = addressSet.getString(6);
+			String zip = addressSet.getString(7);
+			String email = addressSet.getString(8);
+			String phone = addressSet.getString(9);
+
 			this.insertAddress(new AddressEntry(ID, firstName, lastName, street,
 					city, state, zip, email, phone));
 		}
 		
-		rset.close();
+		addressSet.close();
 		stmt.close();
 		conn.close();
 		return counter;

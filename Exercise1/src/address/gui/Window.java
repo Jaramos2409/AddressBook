@@ -25,7 +25,7 @@ import javax.swing.JScrollPane;
 public class Window extends JFrame {
 	JList<KeyNamePair> list;
 	DefaultListModel<KeyNamePair> AddressBookEntries;
-	AddressBook AB;
+	//AddressBook AB;
 	/**
 	 * Create the application.
 	 */
@@ -40,6 +40,7 @@ public class Window extends JFrame {
 		AddressBookEntries = new DefaultListModel<KeyNamePair>();
 		list = new JList<KeyNamePair>(AddressBookEntries);
 		
+		setTitle("Address Book");
 		setBounds(100, 100, 600, 300);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		GridBagLayout gridBagLayout = new GridBagLayout();
@@ -130,8 +131,10 @@ public class Window extends JFrame {
 		JButton btnView = new JButton("View Entry");
 		btnView.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ViewWindow viewWindow = new ViewWindow(list);
-				viewWindow.setVisible(true);
+				if(list.getSelectedIndex() != -1) {
+					ViewWindow viewWindow = new ViewWindow(list);
+					viewWindow.setVisible(true);
+				}
 			}
 		});
 		GridBagConstraints gbc_btnView = new GridBagConstraints();

@@ -1,5 +1,14 @@
 package address.data;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 import java.util.UUID;
 
 /**
@@ -16,6 +25,7 @@ public class AddressEntry {
 	Address address; 
 	String email;
 	String phone;
+	List<Note> notes;
 	
 	/**
 	 * Purpose: Creates an empty entry 
@@ -26,6 +36,7 @@ public class AddressEntry {
 		address = new Address();
 		email = "";
 		phone = "";
+		notes = new ArrayList<Note>();
 	}
 	
 	/**
@@ -40,6 +51,7 @@ public class AddressEntry {
 		address = a;
 		email = e;
 		phone = p;
+		notes = new ArrayList<Note>();
 	}
 	
 	/**
@@ -53,12 +65,14 @@ public class AddressEntry {
 	 * @param e the entry's email
 	 * @param p the entry's phone number
 	 */
-	public AddressEntry(String id, Name n, Address a, String e, String p) {
+	public AddressEntry(String id, Name n, Address a, String e
+			, String p, List<Note> not) {
 		ID = id;
 		name = n;
 		address = a;
 		email = e;
 		phone = p;
+		notes = not;
 	}
 	
 	/**
@@ -80,6 +94,7 @@ public class AddressEntry {
 		address = new Address(str, c, sta, z);
 		email = e;
 		phone = p;
+		notes = new ArrayList<Note>();
 	}
 	
 	/**
@@ -102,6 +117,7 @@ public class AddressEntry {
 		address = new Address(str, c, sta, z);
 		email = e;
 		phone = p;
+		notes = new ArrayList<Note>();
 	}
 	
 	/**
@@ -252,5 +268,158 @@ public class AddressEntry {
 		
 		return result; 
 	}
+
+	/**
+	 * Purpose: Loads the notes from the database
+	 * @throws SQLException
+	 */
+	public void loadNotes() throws SQLException {
+		try {
+			Class.forName("oracle.jdbc.OracleDriver").newInstance();
+		} catch (InstantiationException 
+				| IllegalAccessException 
+				| ClassNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		String url = "jdbc:oracle:thin:bs8285/RYB5ECyM@"
+				+ "mcsdb1.sci.csueastbay.edu:1521/MCSDB1";
+		Connection conn = null;
+		try {
+			conn = DriverManager.getConnection(url);
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		Statement stmt = null;
+		try {
+			stmt = conn.createStatement();
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		ResultSet noteSet = stmt.executeQuery("select * from NOTESTABLE where "
+					+ "ADDRESSENTRYID='"+ID+"'");
+		if(noteSet.next()){
+			String notesList = noteSet.getString(2);
+			
+			if(notesList != null && !notesList.isEmpty()){
+				Scanner sc = new Scanner(notesList);
+			    for (String s; (s = sc.findWithinHorizon("(?<=\\[).*?(?=\\])"
+			    		, 0)) != null;) {
+			    	Note note = new Note(ID, s);
+			    	notes.add(note);
+			    }
+			    sc.close();
+			}
+		}
+		
+		noteSet.close();
+		stmt.close();
+		conn.close();
+	}
 	
+	/**
+	 * Purpose: Saves all the notes for the entry in the database
+	 * @throws SQLException
+	 */
+	public boolean saveNotes () throws SQLException {
+		boolean result = false;
+		PreparedStatement deleteNotes = null;
+		PreparedStatement updateNotes = null;
+		String deleteString = "delete from NOTESTABLE where ADDRESSENTRYID=?";
+		String updateString = "insert into NOTESTABLE (ADDRESSENTRYID, NOTES) VALUES (?,?)";
+		
+		
+		
+		
+		try {
+			Class.forName("oracle.jdbc.OracleDriver").newInstance();
+		} catch (InstantiationException 
+				| IllegalAccessException 
+				| ClassNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		String url = "jdbc:oracle:thin:bs8285/RYB5ECyM@"
+				+ "mcsdb1.sci.csueastbay.edu:1521/MCSDB1";
+		Connection conn = null;
+		try {
+			conn = DriverManager.getConnection(url);
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		String noteSet = new String();
+				
+		for (Note note: notes) {
+			noteSet = noteSet.concat("["+note.getNote()+"],");
+		}
+		noteSet = noteSet.substring(0, noteSet.length() - 1);
+		
+		try {
+	        conn.setAutoCommit(false);
+	        deleteNotes = conn.prepareStatement(deleteString);
+	        updateNotes = conn.prepareStatement(updateString);
+	
+	        deleteNotes.setString(1,ID);
+	        deleteNotes.executeUpdate();
+	        
+	        updateNotes.setString(1, ID);
+	        updateNotes.setString(2, noteSet);
+	        updateNotes.executeUpdate();
+	            
+	        conn.commit();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if(deleteNotes != null) {
+				deleteNotes.close();
+			}
+			if (updateNotes != null){
+				updateNotes.close();
+			}
+			conn.setAutoCommit(true);
+		}
+		
+		conn.close();
+		
+		return result;
+	}
+
+	/**
+	 * Purpose: 
+	 * @param note the note to be added 
+	 */
+	public void insertNote(Note note) {
+		notes.add(note);
+	}
+
+	/**
+	 * Purpose: Returns the list of notes in the entry
+	 * @return
+	 */
+	public List<Note> getNotes() {
+		return notes;
+	}
+	
+	/**
+	 * Purpose: Sets the list of notes
+	 */
+	public void setNotes(List<Note> newNotes) {
+		notes = newNotes;
+	}
+	
+	/**
+	 * Purpose: Checks if the entry has any notes loaded
+	 * @return true if there are no notes loaded, false otherwise
+	 */
+	public boolean isNotesEmpty() {
+		return notes.isEmpty();
+	}
 }

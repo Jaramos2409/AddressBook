@@ -12,6 +12,7 @@ import address.AddressBookApplication;
 import address.data.Address;
 import address.data.AddressEntry;
 import address.data.Name;
+import address.data.Note;
 
 import java.awt.GridBagLayout;
 import javax.swing.JLabel;
@@ -226,7 +227,8 @@ public class EditWindow extends JDialog {
 								new Name(fNField.getText(), lNField.getText()), 
 								new Address(strField.getText(), cityField.getText(), 
 										staField.getText(),zipField.getText())
-								,emailField.getText(), phoneField.getText());
+								,emailField.getText(), phoneField.getText()
+								,pickedEntry.getNotes());
 						AddressBookApplication.addressBook.insertAddress(entry);
 						
 						mainWindow.displayList();
