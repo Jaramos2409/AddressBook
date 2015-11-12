@@ -20,17 +20,37 @@ import java.sql.SQLException;
 import java.util.List;
 import java.awt.event.ActionEvent;
 
+/**
+ * Purpose: Used for creating the window in which a note
+ * is created and then sent into the database after submission.
+ * @author Jesus Ramos
+ * @version 1.0
+ * @since Nov 12, 2015, JDK 8
+ */
 public class NewNoteWindow extends JDialog {
+	/*
+	 * The window from which this one came from
+	 */
+	ViewWindow parentWindow;
 
+	/*
+	 * The panel that contains all the content 
+	 * of the window.
+	 */
 	private final JPanel contentPanel = new JPanel();
 
 	/**
-	 * Create the dialog.
+	 * Purpose: Creates a blank text area that which anything could be typed into. When 
+	 * submit is pressed, whatever was written in the text area is then tied to the 
+	 * corresponding AddressEntryID, and saved onto the database. 
+	 * @param pickedEntry the chosen entry with the ID that is to be tied to the new note at submission
+	 * @param pW the window from which this one came from 
 	 */
-	public NewNoteWindow(AddressEntry pickedEntry) {
+	public NewNoteWindow(AddressEntry pickedEntry, ViewWindow pW) {
+		parentWindow = pW;
 		List<Note> notes = pickedEntry.getNotes();
 		
-		setTitle("View/Edit Note:");
+		setTitle("New Note:");
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
@@ -66,6 +86,7 @@ public class NewNoteWindow extends JDialog {
 							e1.printStackTrace();
 						}
 						AddressBookApplication.addressBook.insertAddress(pickedEntry);
+						parentWindow.displayList(pickedEntry);
 							
 						setVisible(false);
 		                dispatchEvent(new WindowEvent(NewNoteWindow.this

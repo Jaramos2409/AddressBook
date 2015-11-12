@@ -1,6 +1,7 @@
 package address.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 
 import javax.swing.JButton;
@@ -13,9 +14,13 @@ import address.data.Address;
 import address.data.AddressEntry;
 import address.data.Name;
 import address.data.Note;
+import address.gui.event.CloseCancelBtn;
+import address.gui.event.EditEntryOKBtn;
 
 import java.awt.GridBagLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
@@ -24,26 +29,58 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.JTextField;
 
+/**
+ * Purpose: Used to create a window for editing an existing address entry.
+ * @author Jesus Ramos
+ * @version 1.0
+ * @since Nov 12, 2015, JDK 8
+ */
 public class EditWindow extends JDialog {
-
+	/*
+	 * The main panel of the window that contains all the text fields
+	 */
 	private final JPanel contentPanel = new JPanel();
+	/*
+	 * The entry that was chosen to be edited
+	 */
+	private AddressEntry pickedEntry;
+	/*
+	 * The first name
+	 */
 	private JTextField fNField;
+	/*
+	 * The last name
+	 */
 	private JTextField lNField;
+	/*
+	 * The Street Address
+	 */
 	private JTextField strField;
+	/*
+	 * The City name
+	 */
 	private JTextField cityField;
+	/*
+	 * The state
+	 */
 	private JTextField staField;
+	/*
+	 * The Zip code
+	 */
 	private JTextField zipField;
+	/*
+	 * Email
+	 */
 	private JTextField emailField;
+	/*
+	 * Phone Number
+	 */
 	private JTextField phoneField;
 
-	/**
-	 * Create the dialog.
-	 */
 	public EditWindow(Window mainWindow) {
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		String key = mainWindow.list.getSelectedValue().getKey();
-		AddressEntry pickedEntry = 
-				AddressBookApplication.addressBook.getEntry(key);
+		pickedEntry = AddressBookApplication.addressBook.getEntry(key);
 		
 		setTitle("Edit Address:");
 		setBounds(100, 100, 230, 300);
@@ -220,41 +257,246 @@ public class EditWindow extends JDialog {
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				JButton btnOK = new JButton("OK");
-				btnOK.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						AddressEntry entry = new AddressEntry( pickedEntry.getID(),
-								new Name(fNField.getText(), lNField.getText()), 
-								new Address(strField.getText(), cityField.getText(), 
-										staField.getText(),zipField.getText())
-								,emailField.getText(), phoneField.getText()
-								,pickedEntry.getNotes());
-						AddressBookApplication.addressBook.insertAddress(entry);
-						
-						mainWindow.displayList();
-						
-						setVisible(false);
-		                dispatchEvent(new WindowEvent(EditWindow.this
-		                		, WindowEvent.WINDOW_CLOSING));
-					}
-				});
-				btnOK.setActionCommand("OK");
-				buttonPane.add(btnOK);
-				getRootPane().setDefaultButton(btnOK);
+				EditEntryOKBtn btnOK = new EditEntryOKBtn(this, mainWindow);
+				buttonPane.add(btnOK.getBtnOK());
+				getRootPane().setDefaultButton(btnOK.getBtnOK());
 			}
 			{
-				JButton btnCancel = new JButton("Cancel");
-				btnCancel.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						setVisible(false);
-		                dispatchEvent(new WindowEvent(EditWindow.this
-		                		, WindowEvent.WINDOW_CLOSING));
-					}
-				});
-				btnCancel.setActionCommand("Cancel");
-				buttonPane.add(btnCancel);
+				CloseCancelBtn btnCancel = new CloseCancelBtn(this,"Cancel");
+				buttonPane.add(btnCancel.getBtnCancel());
 			}
 		}
 	}
 
+	/*
+	 * Purpose: Checks if the user is inputting proper data for each
+	 * element in the entry
+	 * @return true if all the tests passed, false if the user has input invalid
+	 * data
+	 */
+	public boolean textCheck() {
+		boolean check = fNField.getText().matches("^[\\p{L} .'-]+[\\pL\\pZ\\pP]{0,}+$");
+		if (!check) {
+			fNField.setBackground(Color.yellow);
+			JOptionPane.showMessageDialog(EditWindow.this,
+					"Invalid input. Please try again "
+							+ "with only alphabet characters",
+				    "ERROR",
+				    JOptionPane.ERROR_MESSAGE);
+			return check;
+		}
+		check = lNField.getText().matches("^[\\p{L} .'-]+[\\pL\\pZ\\pP]{0,}+$");
+		if (!check) {
+			lNField.setBackground(Color.yellow);
+			JOptionPane.showMessageDialog(EditWindow.this,
+					"Invalid input. Please try again "
+							+ "with only alphabet characters",
+				    "ERROR",
+				    JOptionPane.ERROR_MESSAGE);
+			return check;
+		}
+		check = strField.getText().matches("\\d.*");
+		if (!check) {
+			strField.setBackground(Color.yellow);
+			JOptionPane.showMessageDialog(EditWindow.this,
+					"Invalid input. Please try again "
+							+ "with a valid address i.e. 123 Example St.",
+				    "ERROR",
+				    JOptionPane.ERROR_MESSAGE);
+			return check;
+		}
+		check = cityField.getText().matches("^[\\p{L} .'-]+[\\pL\\pZ\\pP]{0,}+$");
+		if(!check) {
+			cityField.setBackground(Color.yellow);
+			JOptionPane.showMessageDialog(EditWindow.this,
+					"Invalid input. Please try again "
+							+ "with only alphabet characters",
+				    "ERROR",
+				    JOptionPane.ERROR_MESSAGE);
+			return check;
+		}
+		check = staField.getText().matches("[a-zA-Z]+");
+		if(!check) {
+			staField.setBackground(Color.yellow);
+			JOptionPane.showMessageDialog(EditWindow.this,
+					"Invalid input. Please try again "
+							+ "with only alphabet characters i.e. AZ or CA",
+				    "ERROR",
+				    JOptionPane.ERROR_MESSAGE);
+			return check;
+		}
+		check = zipField.getText().matches("[0-9]+");
+		if(!check) {
+			zipField.setBackground(Color.yellow);
+			JOptionPane.showMessageDialog(EditWindow.this,
+					"Invalid input. Please try again "
+							+ "with only numbers",
+				    "ERROR",
+				    JOptionPane.ERROR_MESSAGE);
+			return check;
+		}
+		check = emailField.getText().contains("@");
+		if(!check) {
+			emailField.setBackground(Color.yellow);
+			JOptionPane.showMessageDialog(EditWindow.this,
+					"Invalid input. Please try again "
+							+ "with a valid email i.e. dangerousmuffin@hotmail.com",
+				    "ERROR",
+				    JOptionPane.ERROR_MESSAGE);
+			return check;
+		}
+		check = phoneField.getText().matches("\\d{3}-\\d{3}-\\d{4}");
+		if(!check) {
+			phoneField.setBackground(Color.yellow);
+			JOptionPane.showMessageDialog(EditWindow.this,
+					"Invalid input. Please try again "
+							+ "with a valid phone number i.e. 555-999-2345",
+				    "ERROR",
+				    JOptionPane.ERROR_MESSAGE);
+			return check;
+		}
+		return check;
+	}
+	
+	/**
+	 * Purpose: Reset all text boxes to a white background
+	 */
+	public void setAllWhite () {
+		fNField.setBackground(Color.white);
+		lNField.setBackground(Color.white);
+		strField.setBackground(Color.white);
+		cityField.setBackground(Color.white);
+		staField.setBackground(Color.white);
+		zipField.setBackground(Color.white);
+		emailField.setBackground(Color.white);
+		phoneField.setBackground(Color.white);
+	}
+
+	/**
+	 * @return the fNField
+	 */
+	public JTextField getfNField() {
+		return fNField;
+	}
+
+	/**
+	 * @param fNField the fNField to set
+	 */
+	public void setfNField(JTextField fNField) {
+		this.fNField = fNField;
+	}
+
+	/**
+	 * @return the lNField
+	 */
+	public JTextField getlNField() {
+		return lNField;
+	}
+
+	/**
+	 * @param lNField the lNField to set
+	 */
+	public void setlNField(JTextField lNField) {
+		this.lNField = lNField;
+	}
+
+	/**
+	 * @return the strField
+	 */
+	public JTextField getStrField() {
+		return strField;
+	}
+
+	/**
+	 * @param strField the strField to set
+	 */
+	public void setStrField(JTextField strField) {
+		this.strField = strField;
+	}
+
+	/**
+	 * @return the cityField
+	 */
+	public JTextField getCityField() {
+		return cityField;
+	}
+
+	/**
+	 * @param cityField the cityField to set
+	 */
+	public void setCityField(JTextField cityField) {
+		this.cityField = cityField;
+	}
+
+	/**
+	 * @return the staField
+	 */
+	public JTextField getStaField() {
+		return staField;
+	}
+
+	/**
+	 * @param staField the staField to set
+	 */
+	public void setStaField(JTextField staField) {
+		this.staField = staField;
+	}
+
+	/**
+	 * @return the zipField
+	 */
+	public JTextField getZipField() {
+		return zipField;
+	}
+
+	/**
+	 * @param zipField the zipField to set
+	 */
+	public void setZipField(JTextField zipField) {
+		this.zipField = zipField;
+	}
+
+	/**
+	 * @return the emailField
+	 */
+	public JTextField getEmailField() {
+		return emailField;
+	}
+
+	/**
+	 * @param emailField the emailField to set
+	 */
+	public void setEmailField(JTextField emailField) {
+		this.emailField = emailField;
+	}
+
+	/**
+	 * @return the phoneField
+	 */
+	public JTextField getPhoneField() {
+		return phoneField;
+	}
+
+	/**
+	 * @param phoneField the phoneField to set
+	 */
+	public void setPhoneField(JTextField phoneField) {
+		this.phoneField = phoneField;
+	}
+
+	/**
+	 * @return the pickedEntry
+	 */
+	public AddressEntry getPickedEntry() {
+		return pickedEntry;
+	}
+
+	/**
+	 * @param pickedEntry the pickedEntry to set
+	 */
+	public void setPickedEntry(AddressEntry pickedEntry) {
+		this.pickedEntry = pickedEntry;
+	}
+	
+	
 }

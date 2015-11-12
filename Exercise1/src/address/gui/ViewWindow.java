@@ -11,6 +11,9 @@ import javax.swing.border.EmptyBorder;
 import address.AddressBookApplication;
 import address.data.AddressEntry;
 import address.data.Note;
+import address.gui.event.CloseCancelBtn;
+import address.gui.event.NewNoteBtn;
+import address.gui.event.ViewEditNoteBtn;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -28,6 +31,16 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JComboBox;
 import javax.swing.JScrollPane;
 
+/**
+ * Purpose: Used for creating the window where a user
+ * views an entire Address Entry and the list of notes
+ * associated with that entry. It also contains the buttons
+ * that, when clicked, allow the user to create and edit
+ * notes for that specific entry. 
+ * @author Jesus Ramos
+ * @version 1.0
+ * @since Nov 12, 2015, JDK 8
+ */
 public class ViewWindow extends JDialog {
 	private String selectedNoteID;
 	private AddressEntry pickedEntry;
@@ -103,40 +116,13 @@ public class ViewWindow extends JDialog {
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
-			{
-				JButton btnClose = new JButton("Close");
-				btnClose.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						setVisible(false);
-		                dispatchEvent(new WindowEvent(ViewWindow.this
-		                		, WindowEvent.WINDOW_CLOSING));
-					}
-				});
-				
-				JButton btnViewNotes = new JButton("View/Edit Note");
-				btnViewNotes.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						ViewEditNoteWindow viewEditNote = 
-								new ViewEditNoteWindow(noteList.getSelectedIndex(), pickedEntry);
-						viewEditNote.setVisible(true);
-						pickedEntry = AddressBookApplication.addressBook.getEntry(key);
-						displayList(pickedEntry);
-					}
-				});
-				buttonPane.add(btnViewNotes);
-				
-				JButton btnNewNote = new JButton("New Note");
-				btnNewNote.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						NewNoteWindow newNote = new NewNoteWindow(pickedEntry);
-						newNote.setVisible(true);
-						pickedEntry = AddressBookApplication.addressBook.getEntry(key);
-						displayList(pickedEntry);
-					}
-				});
-				buttonPane.add(btnNewNote);
-				btnClose.setActionCommand("Cancel");
-				buttonPane.add(btnClose);
+			{	
+				ViewEditNoteBtn btnViewNotes = new ViewEditNoteBtn(pickedEntry, noteList, this);
+				NewNoteBtn btnNewNote = new NewNoteBtn(pickedEntry, this);
+				CloseCancelBtn btnClose = new CloseCancelBtn(this, "Close");
+				buttonPane.add(btnViewNotes.getViewEditNoteBtn());
+				buttonPane.add(btnNewNote.getNewNoteBtn());
+				buttonPane.add(btnClose.getBtnCancel());
 			}
 		}
 	}

@@ -2,6 +2,7 @@ package address.data;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -14,6 +15,8 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import address.gui.*;
 
@@ -150,7 +153,10 @@ public class AddressBook {
 		
 		for (Entry<String, AddressEntry> entry : contacts.entrySet()) {
 			String buf = entry.getValue().getName().getLastName();
-			if (buf.contains(searchTerm)) {
+			buf = buf.toLowerCase();
+			searchTerm = searchTerm.toLowerCase();
+			int sizeSearchTerm = searchTerm.length();
+			if (buf.regionMatches(0, searchTerm, 0, sizeSearchTerm)) {
 				selections.insertAddress(entry.getValue());
 			}
 		}
@@ -292,6 +298,72 @@ public class AddressBook {
 		}
 		stmt.close();
 		conn.close();
+	}
+	
+	/**
+	 * Purpose: Searches the notes database for matching notes and returns them in a 
+	 * list.
+	 * @param searchTerm the search term the user typed in
+	 * @return a list of matching notes
+	 * @throws SQLException
+	 */
+	public List<Note> findNotes(String searchTerm) throws SQLException {
+		List<Note> selections = new ArrayList<Note>();
+		String searchTermQuery = "%"+searchTerm+"%";	
+		PreparedStatement findNotes = null;
+		String findNotesString = "SELECT * FROM NOTESTABLE WHERE NOTES LIKE ?";
+		
+		try {
+			Class.forName("oracle.jdbc.OracleDriver").newInstance();
+		} catch (InstantiationException 
+				| IllegalAccessException 
+				| ClassNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		String url = "jdbc:oracle:thin:bs8285/RYB5ECyM@"
+				+ "mcsdb1.sci.csueastbay.edu:1521/MCSDB1";
+		Connection conn = null;
+		try {
+			conn = DriverManager.getConnection(url);
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		
+		ResultSet foundNotes = null;
+		
+		try {
+	        conn.setAutoCommit(false);
+	        findNotes = conn.prepareStatement(findNotesString);
+	        findNotes.setString(1, searchTermQuery);
+	        foundNotes = findNotes.executeQuery();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
+		
+		while (foundNotes.next ()) {  
+			String found = foundNotes.getString(2);
+			
+			Matcher matcher = Pattern.compile("\\[([^\\]]+)").matcher(found);
+
+		    int pos = -1;
+		    while (matcher.find(pos+1)){
+		        pos = matcher.start();
+		        if((matcher.group(1)).contains(searchTerm)) {
+		        	Note foundNote = new Note(foundNotes.getString(1),matcher.group(1));
+					selections.add(foundNote);
+		        }
+		    }
+		}
+			
+		findNotes.close();
+		conn.setAutoCommit(true);
+		conn.close();
+		
+		return selections;
 	}
 }
 

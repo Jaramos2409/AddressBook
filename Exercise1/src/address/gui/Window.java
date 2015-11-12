@@ -7,6 +7,15 @@ package address.gui;
 
 import address.AddressBookApplication;
 import address.data.*;
+import address.gui.event.DisplayBtn;
+import address.gui.event.EditBtn;
+import address.gui.event.ExitBtn;
+import address.gui.event.FindBtn;
+import address.gui.event.LoadBtn;
+import address.gui.event.NewBtn;
+import address.gui.event.RemoveBtn;
+import address.gui.event.SaveBtn;
+import address.gui.event.ViewBtn;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,10 +31,18 @@ import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 
+/**
+ * Purpose: Used to create the main window for the application.
+ * Contains all the buttons for each functionality of the program and 
+ * the list of entries created after a load from the database has been
+ * completed. 
+ * @author Jesus Ramos
+ * @version 1.0
+ * @since Nov 12, 2015, JDK 8
+ */
 public class Window extends JFrame {
 	JList<KeyNamePair> list;
 	DefaultListModel<KeyNamePair> AddressBookEntries;
-	//AddressBook AB;
 	/**
 	 * Create the application.
 	 */
@@ -50,75 +67,37 @@ public class Window extends JFrame {
 		gridBagLayout.rowWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
 		getContentPane().setLayout(gridBagLayout);
 		
-		JButton btnDisplay = new JButton("Display List");
-		btnDisplay.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				displayList();
-			}
-		});
+		DisplayBtn btnDisplay = new DisplayBtn(this);
 		GridBagConstraints gbc_btnDisplay = new GridBagConstraints();
 		gbc_btnDisplay.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnDisplay.insets = new Insets(0, 0, 5, 5);
 		gbc_btnDisplay.gridx = 0;
 		gbc_btnDisplay.gridy = 0;
-		getContentPane().add(btnDisplay, gbc_btnDisplay);
+		getContentPane().add(btnDisplay.getBtnDisplay(), gbc_btnDisplay);
 		
-		JButton btnNew = new JButton("New");
-		btnNew.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				NewWindow newWindow = new NewWindow(Window.this);
-				newWindow.setVisible(true);
-			}
-		});
+		NewBtn btnNew = new NewBtn(this);
 		GridBagConstraints gbc_btnNew = new GridBagConstraints();
 		gbc_btnNew.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnNew.insets = new Insets(0, 0, 5, 5);
 		gbc_btnNew.gridx = 1;
 		gbc_btnNew.gridy = 0;
-		getContentPane().add(btnNew, gbc_btnNew);
+		getContentPane().add(btnNew.getNewBtn(), gbc_btnNew);
 		
-		JButton btnEdit = new JButton("Edit");
-		btnEdit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				EditWindow editWindow = new EditWindow(Window.this);
-				editWindow.setVisible(true);
-			}
-		});
+		EditBtn btnEdit = new EditBtn(Window.this, list);
 		GridBagConstraints gbc_btnEdit = new GridBagConstraints();
 		gbc_btnEdit.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnEdit.insets = new Insets(0, 0, 5, 5);
 		gbc_btnEdit.gridx = 2;
 		gbc_btnEdit.gridy = 0;
-		getContentPane().add(btnEdit, gbc_btnEdit);
+		getContentPane().add(btnEdit.getEditBtn(), gbc_btnEdit);
 		
-		JButton btnRemove = new JButton("Remove");
-		btnRemove.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int index = list.getSelectedIndex();
-				AddressBookApplication.addressBook.remove(list.getSelectedValue()
-						.getKey());
-				AddressBookEntries.remove(index);
-				
-				int size = AddressBookEntries.getSize();
-				if (size == 0) { 
-					btnRemove.setEnabled(false);
-				
-				} else { 
-					if (index == AddressBookEntries.getSize()) {
-					    index--;
-					}
-					list.setSelectedIndex(index);
-					list.ensureIndexIsVisible(index);
-				}
-				
-			}
-		});
+		RemoveBtn btnRemove = new RemoveBtn(list, AddressBookEntries);
 		GridBagConstraints gbc_btnRemove = new GridBagConstraints();
 		gbc_btnRemove.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnRemove.insets = new Insets(0, 0, 5, 5);
 		gbc_btnRemove.gridx = 3;
 		gbc_btnRemove.gridy = 0;
-		getContentPane().add(btnRemove, gbc_btnRemove);
+		getContentPane().add(btnRemove.getBtnRemove(), gbc_btnRemove);
 		
 		JScrollPane AddressBookList = new JScrollPane(list);
 		GridBagConstraints gbc_AddressBookList = new GridBagConstraints();
@@ -128,84 +107,44 @@ public class Window extends JFrame {
 		gbc_AddressBookList.gridy = 1;
 		getContentPane().add(AddressBookList, gbc_AddressBookList);
 		
-		JButton btnView = new JButton("View Entry");
-		btnView.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if(list.getSelectedIndex() != -1) {
-					ViewWindow viewWindow = new ViewWindow(list);
-					viewWindow.setVisible(true);
-				}
-			}
-		});
+		ViewBtn btnView = new ViewBtn(list);
 		GridBagConstraints gbc_btnView = new GridBagConstraints();
 		gbc_btnView.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnView.insets = new Insets(0, 0, 0, 5);
 		gbc_btnView.gridx = 0;
 		gbc_btnView.gridy = 2;
-		getContentPane().add(btnView, gbc_btnView);
+		getContentPane().add(btnView.getViewBtn(), gbc_btnView);
 		
-		JButton btnLoad = new JButton("Load");
-		btnLoad.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					AddressBookApplication.addressBook.load();
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-		});
+		LoadBtn btnLoad = new LoadBtn();
 		GridBagConstraints gbc_btnLoad = new GridBagConstraints();
 		gbc_btnLoad.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnLoad.insets = new Insets(0, 0, 0, 5);
 		gbc_btnLoad.gridx = 1;
 		gbc_btnLoad.gridy = 2;
-		getContentPane().add(btnLoad, gbc_btnLoad);
+		getContentPane().add(btnLoad.getLoadBtn(), gbc_btnLoad);
 		
-		JButton btnSave = new JButton("Save");
-		btnSave.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					AddressBookApplication.addressBook.save();
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-		});
+		SaveBtn btnSave = new SaveBtn();
 		GridBagConstraints gbc_btnSave = new GridBagConstraints();
 		gbc_btnSave.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnSave.insets = new Insets(0, 0, 0, 5);
 		gbc_btnSave.gridx = 2;
 		gbc_btnSave.gridy = 2;
-		getContentPane().add(btnSave, gbc_btnSave);
+		getContentPane().add(btnSave.getSaveBtn(), gbc_btnSave);
 		
-		JButton btnFind = new JButton("Find");
-		btnFind.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				SearchWindow searchWindow = new SearchWindow();
-				searchWindow.setVisible(true);
-			}
-		});
+		FindBtn btnFind = new FindBtn();
 		GridBagConstraints gbc_btnFind = new GridBagConstraints();
 		gbc_btnFind.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnFind.insets = new Insets(0, 0, 0, 5);
 		gbc_btnFind.gridx = 3;
 		gbc_btnFind.gridy = 2;
-		getContentPane().add(btnFind, gbc_btnFind);
+		getContentPane().add(btnFind.getFindBtn(), gbc_btnFind);
 		
-		JButton btnExit = new JButton("Exit");
-		btnExit.addActionListener(new ActionListener () {
-			public void actionPerformed(ActionEvent e ) {
-				 setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-				 System.exit(0);
-			}
-		});
+		ExitBtn btnExit = new ExitBtn(this);
 		GridBagConstraints gbc_btnExit = new GridBagConstraints();
 		gbc_btnExit.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnExit.gridx = 4;
 		gbc_btnExit.gridy = 2;
-		getContentPane().add(btnExit, gbc_btnExit);
+		getContentPane().add(btnExit.getExitBtn(), gbc_btnExit);
 	}
 	
 	public void displayList() {

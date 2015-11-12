@@ -20,14 +20,24 @@ import java.sql.SQLException;
 import java.util.List;
 import java.awt.event.ActionEvent;
 
+/**
+ * Purpose: Used to create the window that allows
+ * the user to edit an already existing note from the database.
+ * Once submitted, the note is updated in the database. 
+ * @author Jesus Ramos
+ * @version 1.0
+ * @since Nov 12, 2015, JDK 8
+ */
 public class ViewEditNoteWindow extends JDialog {
+	ViewWindow parentWindow;
 
 	private final JPanel contentPanel = new JPanel();
 
 	/**
 	 * Create the dialog.
 	 */
-	public ViewEditNoteWindow(int selectedIndex, AddressEntry pickedEntry) {
+	public ViewEditNoteWindow(int selectedIndex, AddressEntry pickedEntry, ViewWindow pW) {
+		parentWindow = pW;
 		List<Note> notes = pickedEntry.getNotes();
 		
 		setTitle("View/Edit Note:");
@@ -66,6 +76,7 @@ public class ViewEditNoteWindow extends JDialog {
 							e1.printStackTrace();
 						}
 						AddressBookApplication.addressBook.insertAddress(pickedEntry);
+						parentWindow.displayList(pickedEntry);
 							
 						setVisible(false);
 		                dispatchEvent(new WindowEvent(ViewEditNoteWindow.this
